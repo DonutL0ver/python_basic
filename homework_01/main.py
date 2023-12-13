@@ -4,10 +4,10 @@
 """
 
 
-def power_numbers(*N):
-    s=[x**2 for x in N]
-    print(s)
-power_numbers(1,2,5,7)
+def power_numbers(*args):
+    return [num ** 2 for num in args]
+
+print(power_numbers(1, 2, 5, 7))
 """
     функция, которая принимает N целых чисел,
     и возвращает список квадратов этих чисел
