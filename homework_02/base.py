@@ -1,6 +1,7 @@
+from abc import ABC
 from exceptions import LowFuelError, NotEnoughFuel, CargoOverload
-class Vehicle(LowFuelError, NotEnoughFuel, CargoOverload):
-    def __init__(self, weight=200, fuel=100, fuel_consumption=5):
+class Vehicle(LowFuelError, NotEnoughFuel, CargoOverload,ABC):
+    def __init__(self, weight=200, fuel=600, fuel_consumption=15):
         self.weight=weight
         self.fuel=fuel
         self.fuel_consumption=fuel_consumption
@@ -21,7 +22,7 @@ class Vehicle(LowFuelError, NotEnoughFuel, CargoOverload):
                 self.fuel -= self.fuel_consumption * distance
                 print(f"Moved {distance} km")
             else:
-                raise ValueError("Not enough fuel to cover the distance", self.fuel_consumption)
+                raise NotEnoughFuel("Not enough fuel to cover the distance", self.fuel_consumption)
         else:
             print("Vehicle is not started")
 
