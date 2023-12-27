@@ -15,7 +15,7 @@ class Car(Vehicle):
         self.engine = engine
 
 
-car = Vehicle(weight=158, fuel=65, fuel_consumption=18)
+car = Vehicle(weight=158, fuel=0, fuel_consumption=18)
 try:
     car.start()
     car.move(10)
