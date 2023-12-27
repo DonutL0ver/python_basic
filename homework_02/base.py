@@ -1,31 +1,28 @@
-from abc import ABC
-from exceptions import LowFuelError, NotEnoughFuel, CargoOverload
+from abc import ABC, abstractmethod
 
+class Vehicle(ABC):
+    class LowFuelError(Exception):
+        def __init__(self, message, fuel):
+            super().__init__(message)
+            self.fuel = fuel
 
-class Vehicle(LowFuelError, NotEnoughFuel, CargoOverload, ABC):
+    class NotEnoughFuel(Exception):
+        def __init__(self, message, fuel_consumption):
+            super().__init__(message)
+            self.fuel_consumption = fuel_consumption
+
+    class CargoOverload(Exception):
+        pass
+
     def __init__(self, weight=200, fuel=0, fuel_consumption=15):
         self.weight = weight
         self.fuel = fuel
         self.fuel_consumption = fuel_consumption
         self.started = False
 
+    @abstractmethod
     def start(self):
-        try:
-            if self.fuel == 0:
-                self.started = False
-                raise LowFuelError('Low fuel. Cannot start the vehicle', self.fuel)
-            elif not self.started and self.fuel > 0:
-                self.started = True
-                print("STARTED")
-            elif self.started and self.fuel == 0:
-                self.started = False
-                raise LowFuelError('Low fuel. Cannot start the vehicle', self.fuel)
-            else:
-                pass
-        except LowFuelError:
-            print(f"Low fuel. Cannot start the vehicle", self.fuel)
-
-
+        pass
 
     def move(self, distance):
         if self.started:
@@ -33,19 +30,28 @@ class Vehicle(LowFuelError, NotEnoughFuel, CargoOverload, ABC):
                 self.fuel -= self.fuel_consumption * distance
                 print(f"Moved {distance} km")
             else:
-                raise NotEnoughFuel("Not enough fuel to cover the distance", self.fuel_consumption)
+                raise self.NotEnoughFuel("Not enough fuel to cover the distance", self.fuel_consumption)
         else:
             print("Vehicle is not started")
 
-    class LowFuelError(Exception):
-        def init(self, message, fuel):
-            self.fuel = fuel
+class Car(Vehicle):
+    def start(self):
+        try:
+            if self.fuel == 0:
+                self.started = False
+                raise self.LowFuelError('Low fuel. Cannot start the vehicle', self.fuel)
+            elif not self.started and self.fuel > 0:
+                self.started = True
+                print("STARTED")
+            elif self.started and self.fuel == 0:
+                self.started = False
+                raise self.LowFuelError('Low fuel. Cannot start the vehicle', self.fuel)
+            else:
+                pass
+        except self.LowFuelError as error:
+            print(error)
 
-    class NotEnoughFuel(Exception):
-        def init(self, message, fuel_consumption):
-            self.fuel_consumption = fuel_consumption
-
-
-class Child(Vehicle):  # объявите класс наследник
+class Child(Car):
     def my_method(self):
         print('Вызов метода наследника')
+
