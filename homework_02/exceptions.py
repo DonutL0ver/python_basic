@@ -4,11 +4,19 @@
 - NotEnoughFuel
 - CargoOverload
 """
+
+
 class LowFuelError(Exception):
-    pass
+    def __init__(self, message, fuel):
+        super().__init__(message)
+        self.fuel = fuel
+
 
 class NotEnoughFuel(Exception):
-    pass
+    def __init__(self, message, fuel_consumption):
+        super().__init__(message)
+        self.fuel_consumption = fuel_consumption
+
 
 class CargoOverload(Exception):
     pass
