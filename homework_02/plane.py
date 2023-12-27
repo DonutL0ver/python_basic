@@ -5,6 +5,7 @@ from base import Vehicle
 from exceptions import CargoOverload
 class Plane(Vehicle):
     def __init__(self):
+        super().__init__()
         self.max_cargo=10
         self.cargo=int(5)
 
