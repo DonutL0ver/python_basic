@@ -22,8 +22,8 @@ class Vehicle(LowFuelError, NotEnoughFuel, CargoOverload, ABC):
                 raise LowFuelError('Low fuel. Cannot start the vehicle', self.fuel)
             else:
                 pass
-        except LowFuelError as error:
-            print(error)
+        except LowFuelError:
+            print(f"Low fuel. Cannot start the vehicle", self.fuel)
 
 
 
