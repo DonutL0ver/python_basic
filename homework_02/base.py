@@ -38,8 +38,3 @@ class Car(Vehicle):
                 pass
         except LowFuelError as error:
             print(error)
-
-class Child(Car):
-    def my_method(self):
-        print('Вызов метода наследника')
-
