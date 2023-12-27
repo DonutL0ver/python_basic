@@ -11,14 +11,14 @@ class Vehicle(LowFuelError, NotEnoughFuel, CargoOverload, ABC):
 
     def start(self):
         if self.started and self.fuel == 0:
-            raise LowFuelError("Low fuel. Cannot start the vehicle", self.fuel)
             self.started = False
+            raise LowFuelError("Low fuel. Cannot start the vehicle", self.fuel)
         elif not self.started and self.fuel > 0:
             self.started = True
             print("STARTED")
         elif self.started and self.fuel == 0:
-            raise LowFuelError("Low fuel. Cannot start the vehicle", self.fuel)
             self.started = False
+            raise LowFuelError("Low fuel. Cannot start the vehicle", self.fuel)
         else:
             pass
 
