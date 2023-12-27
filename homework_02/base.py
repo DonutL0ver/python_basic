@@ -16,6 +16,9 @@ class Vehicle(LowFuelError, NotEnoughFuel, CargoOverload, ABC):
         elif not self.started and self.fuel > 0:
             self.started = True
             print("STARTED")
+        elif self.started and self.fuel == 0:
+            raise LowFuelError("Low fuel. Cannot start the vehicle", self.fuel)
+            self.started = False
         else:
             pass
 
