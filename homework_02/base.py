@@ -1,20 +1,22 @@
 from abc import ABC
 from exceptions import LowFuelError, NotEnoughFuel, CargoOverload
-class Vehicle(LowFuelError, NotEnoughFuel, CargoOverload,ABC):
+
+
+class Vehicle(LowFuelError, NotEnoughFuel, CargoOverload, ABC):
     def __init__(self, weight=200, fuel=0, fuel_consumption=15):
-        self.weight=weight
-        self.fuel=fuel
-        self.fuel_consumption=fuel_consumption
+        self.weight = weight
+        self.fuel = fuel
+        self.fuel_consumption = fuel_consumption
         self.started = False
-    def start(self,):
-        if self.fuel>0:
+
+    def start(self, ):
+        if self.started == False and self.fuel > 0:
             self.started = True
             print("STARTED")
         else:
             raise LowFuelError("Low fuel. Cannot start the vehicle", self.fuel)
 
-
-    def move(self,distance):
+    def move(self, distance):
         if self.started:
             if self.fuel >= self.fuel_consumption * distance:
                 self.fuel -= self.fuel_consumption * distance
@@ -31,6 +33,7 @@ class Vehicle(LowFuelError, NotEnoughFuel, CargoOverload,ABC):
     class NotEnoughFuel(Exception):
         def init(self, message, fuel_consumption):
             self.fuel_consumption = fuel_consumption
+
 
 class Child(Vehicle):  # объявите класс наследник
     def my_method(self):
