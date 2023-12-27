@@ -1,20 +1,18 @@
 from abc import ABC
 from exceptions import LowFuelError, NotEnoughFuel, CargoOverload
 class Vehicle(LowFuelError, NotEnoughFuel, CargoOverload,ABC):
-    def __init__(self, weight=200, fuel=600, fuel_consumption=15):
+    def __init__(self, weight=200, fuel=0, fuel_consumption=15):
         self.weight=weight
         self.fuel=fuel
         self.fuel_consumption=fuel_consumption
         self.started = False
-    def start(self):
-        if not self.started:
-            if self.fuel > 0:
-                self.started = True
-                print("Vehicle started")
-            else:
-                raise LowFuelError("Low fuel. Cannot start the vehicle", self.fuel)
+    def start(self,):
+        if self.fuel>0:
+            self.started = True
+            print("STARTED")
         else:
-            print("Vehicle is already started")
+            raise LowFuelError("Low fuel. Cannot start the vehicle", self.fuel)
+
 
     def move(self,distance):
         if self.started:
