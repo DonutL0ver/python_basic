@@ -6,7 +6,7 @@ from engine import Engine
 
 
 class Car(Vehicle):
-    def __init__(self):
+    def __init__(self, *args):
         super().__init__()
         self.engine = None
 
