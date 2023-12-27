@@ -1,6 +1,12 @@
 from abc import ABC, abstractmethod
 from exceptions import CargoOverload,NotEnoughFuel,LowFuelError
+
 class Vehicle(ABC):
+    def __init__(self, weight=200, fuel=0, fuel_consumption=15):
+        self.weight = weight
+        self.fuel = fuel
+        self.fuel_consumption = fuel_consumption
+        self.started = False
 
     @abstractmethod
     def start(self):
