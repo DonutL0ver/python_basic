@@ -1,7 +1,7 @@
 FROM python:3.9-buster
 
 
-COPY ./mai.py /app/mai.py
+COPY mai.py /app/mai.py
 
 RUN pip install fastapi uvicorn
 
