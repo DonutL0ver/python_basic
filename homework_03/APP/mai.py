@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+import asyncio
 
 app = FastAPI()
 
@@ -6,6 +7,7 @@ todos = []
 
 @app.get("/todos")
 def get_todos():
+    await asyncio.sleep(3)
     return todos
 
 @app.post("/todos/{todo_item}")
@@ -20,4 +22,3 @@ def delete_todo(index: int):
         return {"message": "Задача удалена"}
     else:
         return {"message": "Неверный индекс"}
-
