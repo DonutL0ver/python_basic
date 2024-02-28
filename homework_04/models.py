@@ -15,7 +15,6 @@ from sqlalchemy import Column, Integer, String, ForeignKey, Text
 engine = create_async_engine('sqlite+aiosqlite:///./data.db', echo=True)
 
 AsyncSessionLocal = sessionmaker(bind=engine, class_=AsyncSession)
-
 Base = declarative_base()
 
 class User(Base):
@@ -33,3 +32,8 @@ class Post(Base):
     user_id = Column(Integer, ForeignKey('users.id'))
     title = Column(String, index=True)
     body = Column(Text)
+
+async def create_tables():
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+
