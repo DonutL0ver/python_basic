@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<h1>Welcome to our website!</h1>
+<button id="greetButton" class="btn btn-primary">Нажми, чтобы поздороваться</button>
+<div id="greetMessage"></div>
+
+<script>
+document.getElementById("greetButton").addEventListener("click", function() {
+    document.getElementById("greetMessage").innerHTML = "Привет";
+});
+</script>
+{% endblock %}
+
