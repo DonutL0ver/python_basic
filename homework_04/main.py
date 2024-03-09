@@ -14,6 +14,7 @@
 """
 import asyncio
 import os
+import uvicorn
 from fastapi import FastAPI
 from jsonplaceholder_requests import fetch_users_data, fetch_posts_data
 from models import AsyncSessionLocal, User, Post, create_tables
@@ -57,6 +58,5 @@ async def on_startup():
     await create_tables()
 
 if __name__ == "__main__":
-    import uvicorn
     asyncio.run(async_main())
     uvicorn.run(app, host="127.0.0.1", port=8000)
