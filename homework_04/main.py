@@ -14,7 +14,6 @@
 """
 import asyncio
 import os
-import uvicorn
 from fastapi import FastAPI
 from jsonplaceholder_requests import fetch_users_data, fetch_posts_data
 from models import AsyncSessionLocal, User, Post, create_tables
@@ -29,14 +28,14 @@ engine = create_async_engine(PG_CONN_URI)
 AsyncSession = sessionmaker(engine, class_=AsyncSessionLocal, expire_on_commit=False)
 
 async def add_users_to_db(users):
-    async with AsyncSessionLocal() as session:
+    async with AsyncSession() as session:
         async with session.begin():
             for user in users:
                 db_user = User(name=user['name'], username=user['username'], email=user['email'])
                 session.add(db_user)
 
 async def add_posts_to_db(posts):
-    async with AsyncSessionLocal() as session:
+    async with AsyncSession() as session:
         async with session.begin():
             for post in posts:
                 db_post = Post(user_id=post['userId'], title=post['title'], body=post['body'])
@@ -57,6 +56,7 @@ async def async_main():
 async def on_startup():
     await create_tables()
 
-if '__name__' == "__main__":
+if __name__ == "__main__":
+    import uvicorn
     asyncio.run(async_main())
     uvicorn.run(app, host="127.0.0.1", port=8000)
