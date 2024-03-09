@@ -13,11 +13,19 @@
 - закрытие соединения с БД
 """
 import asyncio
+import os
 from fastapi import FastAPI
 from jsonplaceholder_requests import fetch_users_data, fetch_posts_data
 from models import AsyncSessionLocal, User, Post, create_tables
+from sqlalchemy.ext.asyncio import create_async_engine
+from sqlalchemy.orm import sessionmaker
 
 app = FastAPI()
+
+PG_CONN_URI = os.environ.get("SQLALCHEMY_PG_CONN_URI") or "postgresql+asyncpg://username:passwd@localhost:5433/blog"
+engine = create_async_engine(PG_CONN_URI)
+
+AsyncSession = sessionmaker(engine, class_=AsyncSessionLocal, expire_on_commit=False)
 
 async def add_users_to_db(users):
     async with AsyncSessionLocal() as session:
@@ -48,11 +56,7 @@ async def async_main():
 async def on_startup():
     await create_tables()
 
-if __name__ == "__main__":
+if __name__ == "main":
     import uvicorn
     asyncio.run(async_main())
     uvicorn.run(app, host="127.0.0.1", port=8000)
-
-
-
-
