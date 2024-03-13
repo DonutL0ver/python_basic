@@ -9,7 +9,7 @@ AsyncSessionLocal = sessionmaker(bind=engine, class_=AsyncSession)
 Base = declarative_base()
 
 class User(Base):
-    __tablename__ = 'users'
+    tablename = 'users'
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True, nullable=False)
@@ -18,7 +18,7 @@ class User(Base):
     posts = relationship("Post", back_populates="user")
 
 class Post(Base):
-    __tablename__ = 'posts'
+    tablename = 'posts'
 
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
