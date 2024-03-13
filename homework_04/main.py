@@ -13,8 +13,9 @@
 - закрытие соединения с БД
 """
 import asyncio
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
-from models import User, Post, engine, Base
+from models import User, Post, Base
 from jsonplaceholder_requests import fetch_users_data, fetch_posts_data
 
 async def create_tables():
@@ -23,20 +24,18 @@ async def create_tables():
         await conn.run_sync(Base.metadata.create_all)
 
 async def add_users(users_data):
-    Session = sessionmaker(bind=engine, async_=True, expire_on_commit=False)
-    async with Session() as session:
+    async with session() as async_session:
         for user_data in users_data:
             user = User(name=user_data['name'], username=user_data['username'], email=user_data['email'])
-            session.add(user)
-        await session.commit()
+            async_session.add(user)
+        await async_session.commit()
 
 async def add_posts(posts_data):
-    Session = sessionmaker(bind=engine, async_=True, expire_on_commit=False)
-    async with Session() as session:
+    async with session() as async_session:
         for post_data in posts_data:
             post = Post(user_id=post_data['userId'], title=post_data['title'], body=post_data['body'])
-            session.add(post)
-        await session.commit()
+            async_session.add(post)
+        await async_session.commit()
 
 async def async_main():
     users_data, posts_data = await asyncio.gather(
@@ -50,7 +49,9 @@ async def async_main():
         add_posts(posts_data)
     )
 
-    engine.dispose()
-
 if __name__ == '__main__':
+    database_url = 'sqlite+aiosqlite:///./data.db'
+    engine = create_async_engine(database_url, echo=True)
+    session = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
+
     asyncio.run(async_main())
