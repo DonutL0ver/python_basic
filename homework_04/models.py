@@ -1,31 +1,30 @@
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, ForeignKey, Text
+from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy.orm import relationship
 
-engine = create_async_engine('sqlite+aiosqlite:///./data.db', echo=True)
-
-AsyncSessionLocal = sessionmaker(bind=engine, class_=AsyncSession)
 Base = declarative_base()
+DATABASE_URL = 'sqlite+aiosqlite:///db.sqlite'
 
 class User(Base):
-    tablename = 'users'
+    __tablename__ = 'users'
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, index=True, nullable=False)
-    username = Column(String, index=True, nullable=False)
-    email = Column(String, unique=True, index=True, nullable=False)
+    name = Column(String, nullable=False)
+    username = Column(String, nullable=False)
+    email = Column(String, nullable=False)
+
     posts = relationship("Post", back_populates="user")
 
 class Post(Base):
-    tablename = 'posts'
+    __tablename__ = 'posts'
 
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
-    title = Column(String, index=True, nullable=False)
-    body = Column(Text, nullable=False)
+    title = Column(String, nullable=False)
+    body = Column(String, nullable=False)
+
     user = relationship("User", back_populates="posts")
 
-async def create_tables():
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+engine = create_async_engine(DATABASE_URL)
+

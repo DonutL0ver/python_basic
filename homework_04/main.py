@@ -13,48 +13,43 @@
 - закрытие соединения с БД
 """
 import asyncio
-import os
-from fastapi import FastAPI
+from models import User, Post, engine, Base
+from sqlalchemy import async_session
 from jsonplaceholder_requests import fetch_users_data, fetch_posts_data
-from models import AsyncSession, User, Post, create_tables
-from sqlalchemy.ext.asyncio import create_async_engine
-from sqlalchemy.orm import sessionmaker
 
-app = FastAPI()
+async def create_tables():
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)
+        await conn.run_sync(Base.metadata.create_all)
 
-PG_CONN_URI = os.environ.get("SQLALCHEMY_PG_CONN_URI") or "postgresql+asyncpg://username:passwd@localhost:5433/blog"
-engine = create_async_engine(PG_CONN_URI)
+async def add_users(users_data):
+    async with async_session() as session:
+        for user_data in users_data:
+            user = User(name=user_data['name'], username=user_data['username'], email=user_data['email'])
+            session.add(user)
+        await session.commit()
 
-async def add_users_to_db(users):
-    async with AsyncSession() as session:
-        async with session.begin():
-            for user in users:
-                db_user = User(name=user['name'], username=user['username'], email=user['email'])
-                session.add(db_user)
-
-async def add_posts_to_db(posts):
-    async with AsyncSession() as session:
-        async with session.begin():
-            for post in posts:
-                db_post = Post(user_id=post['userId'], title=post['title'], body=post['body'])
-                session.add(db_post)
+async def add_posts(posts_data):
+    async with async_session() as session:
+        for post_data in posts_data:
+            post = Post(user_id=post_data['userId'], title=post_data['title'], body=post_data['body'])
+            session.add(post)
+        await session.commit()
 
 async def async_main():
     users_data, posts_data = await asyncio.gather(
         fetch_users_data(),
-        fetch_posts_data(),
+        fetch_posts_data()
     )
 
-    await asyncio.gather(
-        add_users_to_db(users_data),
-        add_posts_to_db(posts_data)
-    )
-
-@app.on_event("startup")
-async def on_startup():
     await create_tables()
+    await asyncio.gather(
+        add_users(users_data),
+        add_posts(posts_data)
+    )
 
-if __name__ == "__main__":
-    import uvicorn
+    engine.dispose()
+
+if __name__ == '__main__':
     asyncio.run(async_main())
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+
