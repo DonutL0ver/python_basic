@@ -18,40 +18,46 @@ from sqlalchemy.orm import sessionmaker
 from models import User, Post, Base
 from jsonplaceholder_requests import fetch_users_data, fetch_posts_data
 
-async def create_tables():
+
+async def create_tables(engine):
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
 
-async def add_users(users_data):
-    async with session() as async_session:
+
+async def add_users(engine, users_data):
+    async_session = sessionmaker(engine, class_=AsyncSession)
+    async with async_session() as session:
         for user_data in users_data:
             user = User(name=user_data['name'], username=user_data['username'], email=user_data['email'])
-            async_session.add(user)
-        await async_session.commit()
+            session.add(user)
+        await session.commit()
 
-async def add_posts(posts_data):
-    async with session() as async_session:
+
+async def add_posts(engine, posts_data):
+    async_session = sessionmaker(engine, class_=AsyncSession)
+    async with async_session() as session:
         for post_data in posts_data:
             post = Post(user_id=post_data['userId'], title=post_data['title'], body=post_data['body'])
-            async_session.add(post)
-        await async_session.commit()
+            session.add(post)
+        await session.commit()
+
 
 async def async_main():
+    database_url = 'sqlite+aiosqlite:///./data.db'
+    engine = create_async_engine(database_url, echo=True)
+
     users_data, posts_data = await asyncio.gather(
         fetch_users_data(),
         fetch_posts_data()
     )
 
-    await create_tables()
+    await create_tables(engine)
     await asyncio.gather(
-        add_users(users_data),
-        add_posts(posts_data)
+        add_users(engine, users_data),
+        add_posts(engine, posts_data)
     )
 
-if __name__ == '__main__':
-    database_url = 'sqlite+aiosqlite:///./data.db'
-    engine = create_async_engine(database_url, echo=True)
-    session = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
+if __name__ == 'main':
     asyncio.run(async_main())
