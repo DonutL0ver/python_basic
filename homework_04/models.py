@@ -1,10 +1,16 @@
-from sqlalchemy.ext.asyncio import create_async_engine
+
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy.orm import sessionmaker
 
 Base = declarative_base()
 DATABASE_URL = 'sqlite+aiosqlite:///db.sqlite'
+
+engine = create_async_engine(DATABASE_URL, echo=True)
+async_session = sessionmaker(engine, class_=AsyncSession)
+
 
 class User(Base):
     __tablename__ = 'users'
@@ -16,6 +22,7 @@ class User(Base):
 
     posts = relationship("Post", back_populates="user")
 
+
 class Post(Base):
     __tablename__ = 'posts'
 
@@ -26,5 +33,7 @@ class Post(Base):
 
     user = relationship("User", back_populates="posts")
 
-engine = create_async_engine(DATABASE_URL)
 
+async def async_main():
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
