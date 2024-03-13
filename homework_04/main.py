@@ -13,8 +13,8 @@
 - закрытие соединения с БД
 """
 import asyncio
+from sqlalchemy.orm import sessionmaker
 from models import User, Post, engine, Base
-from sqlalchemy import async_session
 from jsonplaceholder_requests import fetch_users_data, fetch_posts_data
 
 async def create_tables():
@@ -23,14 +23,16 @@ async def create_tables():
         await conn.run_sync(Base.metadata.create_all)
 
 async def add_users(users_data):
-    async with async_session() as session:
+    Session = sessionmaker(bind=engine, async_=True, expire_on_commit=False)
+    async with Session() as session:
         for user_data in users_data:
             user = User(name=user_data['name'], username=user_data['username'], email=user_data['email'])
             session.add(user)
         await session.commit()
 
 async def add_posts(posts_data):
-    async with async_session() as session:
+    Session = sessionmaker(bind=engine, async_=True, expire_on_commit=False)
+    async with Session() as session:
         for post_data in posts_data:
             post = Post(user_id=post_data['userId'], title=post_data['title'], body=post_data['body'])
             session.add(post)
@@ -52,4 +54,3 @@ async def async_main():
 
 if __name__ == '__main__':
     asyncio.run(async_main())
-
