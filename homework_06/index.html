@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Records</title>
+</head>
+<body>
+    <h1>Records</h1>
+    <ul>
+        {% for record in records %}
+        <li>{{ record.text }}</li>
+        {% endfor %}
+    </ul>
+
+    <form action="/add" method="POST">
+        <input type="text" name="text" placeholder="Enter text">
+        <button type="submit">Add Record</button>
+    </form>
+</body>
+</html>
