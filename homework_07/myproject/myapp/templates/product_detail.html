@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>{{ object.name }}</h2>
+  <p>Цена: {{ object.price }}$</p>
+  <p>Описание: {{ object.description }}</p>
+  <a href="{% url 'product-list' %}">Вернуться к списку продуктов</a>
+{% endblock %}
