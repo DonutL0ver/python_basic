@@ -15,7 +15,7 @@
 import asyncio
 
 from homework_04.jsonplaceholder_requests import fetch_users_data, fetch_posts_data
-from homework_04.models import engine, Base, Session, User, Post
+from homework_04.models import engine, Base, Session as async_session, User, Post
 
 
 async def main():
@@ -27,7 +27,7 @@ async def main():
         fetch_posts_data(),
     )
 
-    async with Session() as session:
+    async with async_session() as session:
         async with session.begin():
             session.add_all([User(**user) for user in users_data])
             session.add_all([Post(**post) for post in posts_data])
