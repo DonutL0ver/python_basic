@@ -2,7 +2,7 @@
 создайте асинхронные функции для выполнения запросов к ресурсам (используйте aiohttp)
 """
 import aiohttp
-
+import asyncio
 
 
 async def fetch_json(url):
@@ -18,3 +18,4 @@ async def fetch_users_data():
 async def fetch_posts_data():
     return await fetch_json("https://jsonplaceholder.typicode.com/posts")
 
+USERS_DATA_URL = 'https://jsonplaceholder.typicode.com/users'
