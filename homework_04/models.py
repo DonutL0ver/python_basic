@@ -2,6 +2,9 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 from homework_04.main import Base
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 
 
 class User(Base):
@@ -20,3 +23,8 @@ class Post(Base):
     body = Column(String, nullable=False)
     user = relationship("User", back_populates="posts")
 
+
+Base = declarative_base()
+engine = create_engine('sqlite:///yourdatabase.db')
+
+Session = sessionmaker(bind=engine)
