@@ -1,7 +1,4 @@
 
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.orm import sessionmaker
-
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 from homework_04.main import Base
@@ -22,13 +19,4 @@ class Post(Base):
     title = Column(String, nullable=False)
     body = Column(String, nullable=False)
     user = relationship("User", back_populates="posts")
-
-
-async_engine = create_async_engine('sqlite+aiosqlite:///database.db', echo=True)
-
-Session = sessionmaker(
-    async_engine,
-    expire_on_commit=False,
-    class_=AsyncSession
-)
 
