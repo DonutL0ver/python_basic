@@ -18,3 +18,5 @@ async def fetch_users_data():
 async def fetch_posts_data():
     return await fetch_json("https://jsonplaceholder.typicode.com/posts")
 
+USERS_DATA_URL = 'https://jsonplaceholder.typicode.com/users'
+POSTS_DATA_URL = 'https://jsonplaceholder.typicode.com/posts'
