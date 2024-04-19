@@ -1,4 +1,7 @@
 
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy import create_engine
+
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 from homework_04.main import Base
@@ -20,3 +23,5 @@ class Post(Base):
     body = Column(String, nullable=False)
     user = relationship("User", back_populates="posts")
 
+engine = create_engine('sqlite:///database.db')
+Session = sessionmaker(bind=engine)
