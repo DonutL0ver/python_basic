@@ -1,4 +1,4 @@
-from sqlalchemy.util import asyncio
+import asyncio
 from homework_04.jsonplaceholder_requests import fetch_users_data, fetch_posts_data
 from homework_04.myenv.DB import create_tables, add_users_to_db, add_posts_to_db
 

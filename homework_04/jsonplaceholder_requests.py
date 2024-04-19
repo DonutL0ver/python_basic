@@ -2,7 +2,7 @@
 создайте асинхронные функции для выполнения запросов к ресурсам (используйте aiohttp)
 """
 import aiohttp
-import asyncio
+
 
 
 async def fetch_json(url):
