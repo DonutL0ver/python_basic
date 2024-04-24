@@ -12,29 +12,18 @@
   (используйте полученные из запроса данные, передайте их в функцию для добавления в БД)
 - закрытие соединения с БД
 """
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+
 import asyncio
 
-from homework_04.jsonplaceholder_requests import fetch_users_data, fetch_posts_data
-from homework_04.models import engine, Base, Session, User, Post
+async def async_main():
 
+    pass
 
-async def main():
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+DATABASE_URL = "postgresql+asyncpg://user:password@localhost/dbname"
+engine = create_async_engine(DATABASE_URL, echo=True)
+Base = declarative_base()
 
-    users_data, posts_data = await asyncio.gather(
-        fetch_users_data(),
-        fetch_posts_data(),
-    )
-
-    async with Session() as session:
-        async with session.begin():
-            session.add_all([User(**user) for user in users_data])
-            session.add_all([Post(**post) for post in posts_data])
-
-    await engine.dispose()
-
-
-if __name__ == '__main__':
-    asyncio.run(main())
-
+async_session = sessionmaker(engine, class_=AsyncSession)
