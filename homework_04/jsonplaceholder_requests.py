@@ -13,6 +13,7 @@ async def fetch_json(url):
             return await response.json()
 
 
+
 async def fetch_users_data():
     return await fetch_json(USERS_DATA_URL)
 
