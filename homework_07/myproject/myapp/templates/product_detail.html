@@ -1,8 +1,13 @@
-{% extends 'base.html' %}
+<h1>{{ object.name }}</h1>
+<div>
+    <button onclick="location.href='{% url 'product_detail' pk=product.id %}'" class="btn btn-primary">Подробнее</button>
 
-{% block content %}
-  <h2>{{ object.name }}</h2>
-  <p>Цена: {{ object.price }}$</p>
-  <p>Описание: {{ object.description }}</p>
-  <a href="{% url 'product-list' %}">Вернуться к списку продуктов</a>
-{% endblock %}
+    <strong>Description:</strong> {{ object.description }}
+</div>
+<div>
+    <strong>Price:</strong> {{ object.price }}
+</div>
+<div>
+    <strong>Category:</strong> {{ object.category.name }}
+</div>
+<a href="{% url 'product-list' %}">Back to List</a>
