@@ -1,10 +1,13 @@
-from django.urls import path
-from .views import ProductListView, ProductDetailView, home_view
-
+from django.urls import path, include
+from . import views
+from .views import ProductListView, ProductDetailView, home_view, index_view
+from django.contrib import admin
 urlpatterns = [
-    path('', home_view, name='myapp_home'),
-    path('home/', home_view, name='home_view'),
-    path('products/', ProductListView.as_view(), name='product_list'),
-    path('products/<int:pk>/', ProductDetailView.as_view(), name='product_detail'),
+    path('admin/', admin.site.urls),
+
+    path('home/', views.home_view, name='home'),
+    path('index/', views.index_view, name='index'),
+    path('product_list/', ProductListView, name='product_list'),
+    path('product_detail/', ProductDetailView, name='product_detail'),
 ]
 

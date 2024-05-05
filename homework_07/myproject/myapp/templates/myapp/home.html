@@ -5,6 +5,8 @@
 </head>
 <body>
     <h1>Добро пожаловать на наш сайт!</h1>
+    <a href="{% url 'index' %}"><button>Index</button></a>
     <a href="{% url 'product_list' %}"><button>Перейти к списку продуктов</button></a>
+    <a href="{% url 'product_detail' %}"><button>Перейти к деталям</button></a>
 </body>
 </html>

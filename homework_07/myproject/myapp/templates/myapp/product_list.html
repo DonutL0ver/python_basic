@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Список продуктов</title>
+</head>
+<body>
+    <h1>Список продуктов</h1>
+    <ul>
+        {% for product in products %}
+            <li>
+                <strong> Машина:{{ product.name }}</strong> - Описание: {{ product.description }} - Цена: {{ product.price }} руб. - Категория: {{ product.category.name }}
+
+            </li>
+        {% empty %}
+            <li>Продукты отсутствуют.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
+<a href="{% url 'home' %}"><button>Вернуться на главную</button></a>
