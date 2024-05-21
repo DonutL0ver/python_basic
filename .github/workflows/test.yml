@@ -1,56 +1,58 @@
-name: Django Tests
+name: Django CI
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   test:
+    name: Run Django Tests
     runs-on: ubuntu-latest
 
     services:
       postgres:
         image: postgres:latest
         env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: password
-          POSTGRES_DB: test_db
+          POSTGRES_DB: mydatabase
+          POSTGRES_USER: myuser
+          POSTGRES_PASSWORD: mypassword
         ports:
           - 5432:5432
         options: >-
-          --health-cmd "pg_isready -U postgres" 
-          --health-interval 10s 
-          --health-timeout 5s 
+          --health-cmd "pg_isready -U $POSTGRES_USER -d $POSTGRES_DB"
+          --health-interval 10s
+          --health-timeout 5s
           --health-retries 5
 
     env:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: test_db
+      DJANGO_SECRET_KEY: your_secret_key_here
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      DB_HOST: localhost
 
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v3
 
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
-        python-version: 3.11
-
+        python-version: '3.8'
+        
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt  # Убедитесь, что у вас есть файл requirements.txt с зависимостями, необходимыми для вашего проекта
-
+        pip install -r requirements.txt
+        
     - name: Run migrations
-      run: python manage.py migrate
-
-    - name: Run tests with coverage
       run: |
-        pip install coverage
-        coverage run manage.py test
-
-    - name: Upload coverage to Codecov
-      env:
-        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        python manage.py migrate
+        
+    - name: Run tests
       run: |
-        pip install codecov
-        codecov
+        python manage.py test
