@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My View</title>
+</head>
+<body>
+    {% for item in my_model_list %}
+        <p>{{ item.name }}: {{ item.description }}</p>
+    {% endfor %}
+</body>
+</html>
