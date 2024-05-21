@@ -33,7 +33,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: 3.11  
+        python-version: 3.8  # Выберите версию Python, которую вы используете
 
     - name: Install dependencies
       run: |
@@ -43,5 +43,14 @@ jobs:
     - name: Run migrations
       run: python manage.py migrate
 
-    - name: Run tests
-      run: python manage.py test
+    - name: Run tests with coverage
+      run: |
+        pip install coverage
+        coverage run manage.py test
+
+    - name: Upload coverage to Codecov
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      run: |
+        pip install codecov
+        codecov
