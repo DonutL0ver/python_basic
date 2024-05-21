@@ -51,8 +51,20 @@ jobs:
         
     - name: Run migrations
       run: |
-        python manage.py migrate
+        python myproject/manage.py migrate
         
     - name: Run tests
       run: |
-        python manage.py test
+        python myproject/manage.py test
+
+    - name: Run tests with coverage (bonus)
+      run: |
+        coverage run --source='.' myproject/manage.py test
+        coverage report
+        coverage xml
+        
+    - name: Upload coverage to Codecov (bonus)
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        token: ${{ secrets.CODECOV_TOKEN }}  # Ensure you have the token in your repository secrets
