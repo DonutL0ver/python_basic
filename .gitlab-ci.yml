@@ -1,0 +1,23 @@
+stages:
+  - test
+
+# Job для тестирования на ветке master
+test_master:
+  stage: test
+  script:
+    - echo "Running tests on master"
+    - npm install
+    - npm test
+  only:
+    - master
+
+# Job для тестирования в Merge Requests
+test_mr:
+  stage: test
+  script:
+    - echo "Running tests in Merge Request"
+    - npm install
+    - npm test
+  only:
+    - merge_requests
+  when: manual
