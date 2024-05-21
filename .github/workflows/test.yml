@@ -43,28 +43,33 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: '3.8'
-        
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-        
+      working-directory: homework_07  # Убедитесь, что requirements.txt находится в этой директории. Измените, если необходимо.
+
     - name: Run migrations
       run: |
-        python myproject/manage.py migrate
-        
+        python manage.py migrate
+      working-directory: homework_07/myproject  # Устанавливаем правильный рабочий каталог
+
     - name: Run tests
       run: |
-        python myproject/manage.py test
+        python manage.py test
+      working-directory: homework_07/myproject  # Устанавливаем правильный рабочий каталог
 
-    - name: Run tests with coverage (bonus)
+    - name: Run tests with coverage (optional)
       run: |
-        coverage run --source='.' myproject/manage.py test
+        pip install coverage
+        coverage run --source='.' manage.py test
         coverage report
         coverage xml
-        
-    - name: Upload coverage to Codecov (bonus)
+      working-directory: homework_07/myproject  # Устанавливаем правильный рабочий каталог
+
+    - name: Upload coverage to Codecov (optional)
       uses: codecov/codecov-action@v3
       with:
-        file: ./coverage.xml
+        file: homework_07/myproject/coverage.xml
         token: ${{ secrets.CODECOV_TOKEN }}  # Ensure you have the token in your repository secrets
