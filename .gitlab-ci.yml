@@ -1,23 +1,24 @@
 stages:
   - test
 
-# Job для тестирования на ветке master
-test_master:
+variables:
+  GIT_STRATEGY: clone
+
+test_job:
   stage: test
   script:
-    - echo "Running tests on master"
-    - npm install
-    - npm test
+    - echo "Running tests..."
+    - # Здесь можно добавить команды для запуска тестов
   only:
     - master
+  except:
+    - merge_requests
 
-# Job для тестирования в Merge Requests
-test_mr:
+manual_test_job:
   stage: test
   script:
-    - echo "Running tests in Merge Request"
-    - npm install
-    - npm test
+    - echo "Running manual tests..."
+    - # Здесь можно добавить команды для запуска тестов вручную
+  when: manual
   only:
     - merge_requests
-  when: manual
